@@ -148,8 +148,6 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
     }
 
     public void fetchApi(int filter) {
-        latitGlobal = 19.076090;
-        longitGlobal =72.877426;
         globalTabPosition = filter;
         String API_KEY = "apikeydaldo";
         String url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?keyword="+ globalDestination +"&location="+latitGlobal+"%2C"+longitGlobal+"&radius=50000&key="+API_KEY;
