@@ -99,14 +99,14 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
                 }
                 fetchApi(globalTabPosition);
             }
-        });
+        }, getBaseContext());
         PopulateCategoriesRecyclerView(recyclerViewCategories, recyclerViewCategoriesAdapter);
         globalDestination = "Travel";
         globalTabPosition = 0;
 
         searchView = (EditText) this.findViewById(R.id.searchBar);
         tabLayout = findViewById(R.id.tabLayout);
-        tabLayout.addTab(tabLayout.newTab().setText("Hotspot"));//Recommendation
+        tabLayout.addTab(tabLayout.newTab().setText("Popular"));//Recommendation
         tabLayout.addTab(tabLayout.newTab().setText("Nearest"));
         tabLayout.addTab(tabLayout.newTab().setText("All"));
 
@@ -148,8 +148,10 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
     }
 
     public void fetchApi(int filter) {
+        latitGlobal = 19.076090;
+        longitGlobal =72.877426;
         globalTabPosition = filter;
-        String API_KEY = "<YOUR-API-KEY>";
+        String API_KEY = "apikeydaldo";
         String url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?keyword="+ globalDestination +"&location="+latitGlobal+"%2C"+longitGlobal+"&radius=50000&key="+API_KEY;
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         String uri = Uri.parse(url)
@@ -311,10 +313,10 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
 
     private List<Categories> createCategories() {
         List<Categories> categories = new ArrayList<>();
-        categories.add(new Categories(R.drawable.travel, "Travel"));
-        categories.add(new Categories(R.drawable.food, "Food"));
-        categories.add(new Categories(R.drawable.shopping, "Shopping"));
-        categories.add(new Categories(R.drawable.hotel, "Hotels"));
+        categories.add(new Categories("https://youmatter.world/app/uploads/sites/2/2019/11/travel-world.jpg?w=100&h=100", "Travel"));
+        categories.add(new Categories("https://d18mqtxkrsjgmh.cloudfront.net/public/2021-03/Eating%20More%20Ultraprocessed%20%E2%80%98Junk%E2%80%99%20Food%20Linked%20to%20Higher%20CVD%20Risk.jpeg?w=100&h=100", "Food"));
+        categories.add(new Categories("https://img.freepik.com/free-photo/girl-holds-fashion-shopping-bag-beauty_1150-13673.jpg?w=100&h=100", "Shopping"));
+        categories.add(new Categories("https://cdn.britannica.com/96/115096-050-5AFDAF5D/Bellagio-Hotel-Casino-Las-Vegas.jpg?w=100&h=100", "Hotels"));
         return categories;
     }
     public String getAddress(double lat, double lng) {

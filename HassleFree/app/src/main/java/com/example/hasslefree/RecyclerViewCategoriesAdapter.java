@@ -1,5 +1,6 @@
 package com.example.hasslefree;
 
+import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,15 +12,19 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+
 import java.util.List;
 
 public class RecyclerViewCategoriesAdapter extends RecyclerView.Adapter<RecyclerViewCategoriesAdapter.MyViewHolderCategories>{
     private final List<Categories> categoriesList;
     private OnItemClickListener onItemClickListener;
+    private Context ctx;
 
-    RecyclerViewCategoriesAdapter(List<Categories>categories,  OnItemClickListener onItemClickListener){
+    RecyclerViewCategoriesAdapter(List<Categories>categories,  OnItemClickListener onItemClickListener, Context ctx){
         this.categoriesList = categories;
         this.onItemClickListener = onItemClickListener;
+        this.ctx = ctx;
     }
 
 
@@ -39,7 +44,7 @@ public class RecyclerViewCategoriesAdapter extends RecyclerView.Adapter<Recycler
     public void onBindViewHolder(@NonNull RecyclerViewCategoriesAdapter.MyViewHolderCategories holder, int position) {
         final Categories categories = categoriesList.get(position);
         holder.categoryTitle.setText(categories.getTitle());
-        holder.categoryImage.setBackgroundResource(categories.getImage());
+        Glide.with(ctx).load(categories.getImage()).into(holder.categoryImage);
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
