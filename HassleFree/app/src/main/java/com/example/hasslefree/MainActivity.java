@@ -15,6 +15,7 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -26,7 +27,6 @@ import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.airbnb.lottie.LottieAnimationView;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -48,6 +48,7 @@ import java.util.Locale;
 public class MainActivity extends AppCompatActivity implements LocationListener {
     private EditText searchView;
     private TextView locationText;
+    private Button completeDetailButton;
     protected LocationManager locationManager;
     private static final int REQUEST_LOCATION = 1;
     private TabLayout tabLayout;
@@ -74,7 +75,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         } else {
             getLocation(locationText);
         }
-
+        completeDetailButton = (Button) findViewById(R.id.completeDetailButton);
         recyclerViewCategories = (RecyclerView) findViewById(R.id.recyclerViewCategories);
         recyclerViewCategoriesAdapter = new RecyclerViewCategoriesAdapter(createCategories(), new RecyclerViewCategoriesAdapter.OnItemClickListener() {
             @Override
@@ -137,6 +138,13 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
             }
         });
 
+        completeDetailButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // write intent here to call ne activity with complete route to hotspot destination
+                // with total distance, total cost and time to travel. in  travel category.
+            }
+        });
     }
 
     public void fetchApi(int filter) {
