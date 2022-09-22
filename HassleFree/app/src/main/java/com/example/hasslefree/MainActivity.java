@@ -85,23 +85,23 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
                 switch (position)
                 {
                     case 0:
-                        globalDestination = "Travel";
+                        globalDestination = "best tourist attraction in";
                         break;
                     case 1:
-                        globalDestination = "Food";
+                        globalDestination = "best food places in";
                         break;
                     case 2:
-                        globalDestination = "Shopping";
+                        globalDestination = "best shopping places in";
                         break;
                     default:
-                        globalDestination = "Hotel";
+                        globalDestination = "best hotels in";
                         break;
                 }
-                fetchApi(globalTabPosition);
+                fetchApi(globalTabPosition, locationText.getText().toString());
             }
         }, getBaseContext());
         PopulateCategoriesRecyclerView(recyclerViewCategories, recyclerViewCategoriesAdapter);
-        globalDestination = "Travel";
+        globalDestination = "best tourist attraction in";
         globalTabPosition = 0;
 
         searchView = (EditText) this.findViewById(R.id.searchBar);
@@ -112,22 +112,22 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
 
         recyclerViewDestination = (RecyclerView)findViewById(R.id.recyclerViewDestinations);
 
-        fetchApi(globalTabPosition);
+        fetchApi(globalTabPosition, locationText.getText().toString());
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 destinations.clear();
                 if(tab.getPosition() == 0)
                 {
-                    fetchApi( tab.getPosition());
+                    fetchApi(tab.getPosition(), locationText.getText().toString());
                 }
                 else if(tab.getPosition() == 1)
                 {
-                    fetchApi(tab.getPosition());
+                    fetchApi(tab.getPosition(), locationText.getText().toString());
                 }
                 else
                 {
-                    fetchApi( tab.getPosition());
+                    fetchApi(tab.getPosition(), locationText.getText().toString());
                 }
             }
             @Override
@@ -147,10 +147,13 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         });
     }
 
-    public void fetchApi(int filter) {
+    public void fetchApi(int filter, String city) {
+        //for emulator testing hardcode lat, lng.
+        /*latitGlobal = 18.516726;
+        longitGlobal = 73.856255;*/
         globalTabPosition = filter;
-        String API_KEY = "apikeydaldo";
-        String url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?keyword="+ globalDestination +"&location="+latitGlobal+"%2C"+longitGlobal+"&radius=50000&key="+API_KEY;
+        String API_KEY = "api key";
+        String url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?keyword="+ globalDestination + city +"&location="+latitGlobal+"%2C"+longitGlobal+"&radius=50000&key="+API_KEY;
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         String uri = Uri.parse(url)
                 .buildUpon()
