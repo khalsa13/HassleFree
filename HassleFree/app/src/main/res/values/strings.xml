@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">HassleFree</string>
+    <string name="HeyText">Hi</string>
+    <string name="TravellerName">Traveller, </string>
+    <string name="avatar">Avatar</string>
+    <string name="TagLine">Where do you want \nto go?</string>
+    <string name="discover_a_city">  Discover a city</string>
+    <string name="explore">Explore</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="categories">Categories</string>
+</resources>
