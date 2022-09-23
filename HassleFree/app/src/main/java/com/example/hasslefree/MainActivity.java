@@ -33,6 +33,11 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.gms.common.api.Status;
+import com.google.android.libraries.places.api.Places;
+import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
+import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
 import com.google.android.material.tabs.TabLayout;
 
 import org.json.JSONArray;
@@ -41,18 +46,20 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity implements LocationListener {
-    private EditText searchView;
     private TextView locationText;
+    AutocompleteSupportFragment autocompleteFragment;
     private Button completeDetailButton;
     protected LocationManager locationManager;
     private static final int REQUEST_LOCATION = 1;
     private TabLayout tabLayout;
     private String globalDestination;
+    private String selectedCity = null;
     double latitGlobal, longitGlobal;
     private RecyclerView recyclerViewDestination = null, recyclerViewCategories = null;
     private RecyclerViewDestinationAdapter recyclerViewDestinationAdapter = null;
@@ -104,7 +111,36 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         globalDestination = "best tourist attraction in";
         globalTabPosition = 0;
 
-        searchView = (EditText) this.findViewById(R.id.searchBar);
+        // Initialize the AutocompleteSupportFragment.
+        autocompleteFragment = (AutocompleteSupportFragment)
+                getSupportFragmentManager().findFragmentById(R.id.searchBar);
+
+        // Specify the types of place data to return.
+        autocompleteFragment.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.LAT_LNG));
+        if (!Places.isInitialized()) {
+            Places.initialize(getApplicationContext(), "api-key", Locale.US);
+        }
+        autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+            @Override
+            public void onPlaceSelected(@NonNull Place place) {
+                // TODO: Get info about the selected place.
+                Log.i("SearchPlace", "Place: " + place.getName() + ", " + place.getId());
+                latitGlobal = place.getLatLng().latitude;
+                longitGlobal = place.getLatLng().longitude;
+                selectedCity = place.getName();
+                final TextView textView = (TextView) findViewById(R.id.cityName);
+                textView.setText(selectedCity);
+                fetchApi(globalTabPosition, selectedCity);
+            }
+
+
+            @Override
+            public void onError(@NonNull Status status) {
+                // TODO: Handle the error.
+                Log.i("SearchPlace", "An error occurred: " + status);
+            }
+        });
+
         tabLayout = findViewById(R.id.tabLayout);
         tabLayout.addTab(tabLayout.newTab().setText("Popular"));//Recommendation
         tabLayout.addTab(tabLayout.newTab().setText("Nearest"));
@@ -112,7 +148,11 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
 
         recyclerViewDestination = (RecyclerView)findViewById(R.id.recyclerViewDestinations);
 
-        fetchApi(globalTabPosition, locationText.getText().toString());
+        if (selectedCity == null) {
+            final TextView textView = (TextView) findViewById(R.id.cityName);
+            textView.setText(locationText.getText().toString());
+            fetchApi(globalTabPosition, locationText.getText().toString());
+        }
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
@@ -190,7 +230,8 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
                     double rating = actor.getDouble("rating");
                     double distance = getKmFromLatLong(latitGlobal, longitGlobal, location.getDouble("lat"), location.getDouble("lng") );
                     String[] address = actor.getString("vicinity").split(",");
-                    String exactLocation = address[address.length - 2];
+                    Log.i("SearchAddress", Arrays.toString(address));
+                    String exactLocation = address[0];
                     Thread.sleep(50);
                     destinations.add(new Destination(name, exactLocation, distance, rating, photoUrl));
                     }
