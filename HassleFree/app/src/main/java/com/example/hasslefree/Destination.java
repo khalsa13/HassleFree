@@ -1,8 +1,11 @@
 package com.example.hasslefree;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.Comparator;
 
-public class Destination  {
+public class Destination implements Parcelable {
     private final String destinationName, exactLocation, image;
     private final double distance;
     private final double rating;
@@ -15,6 +18,29 @@ public class Destination  {
         this.image = image;
     }
 
+    public String getDescription(){
+        return "this is dummy description. Changes required to make this work question is where to get to get if maps api is providing then okay";
+    }
+
+    protected Destination(Parcel in) {
+        destinationName = in.readString();
+        exactLocation = in.readString();
+        image = in.readString();
+        distance = in.readDouble();
+        rating = in.readDouble();
+    }
+
+    public static final Creator<Destination> CREATOR = new Creator<Destination>() {
+        @Override
+        public Destination createFromParcel(Parcel in) {
+            return new Destination(in);
+        }
+
+        @Override
+        public Destination[] newArray(int size) {
+            return new Destination[size];
+        }
+    };
 
     public String getDestinationName() {
         return this.destinationName;
@@ -72,4 +98,17 @@ public class Destination  {
         };
     }
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(destinationName);
+        parcel.writeString(exactLocation);
+        parcel.writeString(image);
+        parcel.writeDouble(distance);
+        parcel.writeDouble(rating);
+    }
 }

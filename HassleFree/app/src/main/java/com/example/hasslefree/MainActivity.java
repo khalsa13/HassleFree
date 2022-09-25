@@ -64,9 +64,18 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
     private RecyclerView recyclerViewDestination = null, recyclerViewCategories = null;
     private RecyclerViewDestinationAdapter recyclerViewDestinationAdapter = null;
     private RecyclerViewCategoriesAdapter recyclerViewCategoriesAdapter = null;
-    private List<Destination>destinations;
+    private ArrayList<Destination>destinations;
     private int globalTabPosition;
   //  private LottieAnimationView lottieAnimationView;
+
+    // call this method from on click listner.
+    // pass the data of the place that needs to be opened in the new tab.
+    private void callSecondActivity(){
+        Intent intent = new Intent(MainActivity.this, MainActivity2.class);
+        intent.putParcelableArrayListExtra("destinations", destinations);
+        intent.putExtra("current", "test_name");
+        startActivity(intent);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -192,7 +201,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         /*latitGlobal = 18.516726;
         longitGlobal = 73.856255;*/
         globalTabPosition = filter;
-        String API_KEY = "api key";
+        String API_KEY = "AIzaSyB30OSuMEkVEPQSxzzPvmDKLQNVc-Nm7xI";
         String url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?keyword="+ globalDestination + city +"&location="+latitGlobal+"%2C"+longitGlobal+"&radius=50000&key="+API_KEY;
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         String uri = Uri.parse(url)
