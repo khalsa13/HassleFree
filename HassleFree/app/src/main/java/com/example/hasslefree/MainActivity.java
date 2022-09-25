@@ -201,7 +201,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         /*latitGlobal = 18.516726;
         longitGlobal = 73.856255;*/
         globalTabPosition = filter;
-        String API_KEY = "AIzaSyB30OSuMEkVEPQSxzzPvmDKLQNVc-Nm7xI";
+        String API_KEY = "<API_KEY>";
         String url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?keyword="+ globalDestination + city +"&location="+latitGlobal+"%2C"+longitGlobal+"&radius=50000&key="+API_KEY;
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         String uri = Uri.parse(url)
