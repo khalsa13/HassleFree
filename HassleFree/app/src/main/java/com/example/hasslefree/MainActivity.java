@@ -70,10 +70,10 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
 
     // call this method from on click listner.
     // pass the data of the place that needs to be opened in the new tab.
-    private void callSecondActivity(){
+    private void callSecondActivity(Destination data){
         Intent intent = new Intent(MainActivity.this, MainActivity2.class);
         intent.putParcelableArrayListExtra("destinations", destinations);
-        intent.putExtra("current", "test_name");
+        intent.putExtra("current", data);
         startActivity(intent);
     }
 
@@ -203,11 +203,12 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         globalTabPosition = filter;
         String API_KEY = "AIzaSyB30OSuMEkVEPQSxzzPvmDKLQNVc-Nm7xI";
         String url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?keyword="+ globalDestination + city +"&location="+latitGlobal+"%2C"+longitGlobal+"&radius=50000&key="+API_KEY;
+        Log.i("FetchApi", url);
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         String uri = Uri.parse(url)
                 .buildUpon()
                 .build().toString();
-
+        Log.i("FetchApi", uri);
         JsonObjectRequest request = new JsonObjectRequest(
                 Request.Method.GET, uri,null, new Response.Listener<JSONObject>() {
             @Override
@@ -241,8 +242,14 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
                     String[] address = actor.getString("vicinity").split(",");
                     Log.i("SearchAddress", Arrays.toString(address));
                     String exactLocation = address[0];
+                    String description = "";
+                    JSONArray types = actor.getJSONArray("types");
+                    for(int _p=0;_p<types.length();_p++){
+                        description += types.getString(_p);
+                        description += "\n";
+                    }
                     Thread.sleep(50);
-                    destinations.add(new Destination(name, exactLocation, distance, rating, photoUrl));
+                    destinations.add(new Destination(name, exactLocation, distance, rating, photoUrl, description));
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -332,13 +339,17 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
     private void PopulateDestinationRecyclerView(RecyclerView recyclerView, RecyclerViewDestinationAdapter recyclerViewDestinationAdapter){
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);
         recyclerView.setLayoutManager(layoutManager);
+
         recyclerViewDestinationAdapter.setOnItemClickListener(new RecyclerViewDestinationAdapter.ClickListener<Destination>(){
 
             @Override
             public void onItemClick(Destination data) {
-                Toast.makeText(MainActivity.this, data.getDestinationName(), Toast.LENGTH_SHORT).show();
+                callSecondActivity(data);
+                // Toast.makeText(MainActivity.this, data.getDestinationName() + "$babnish", Toast.LENGTH_SHORT).show();
             }
         });
+
+
         recyclerView.setAdapter(recyclerViewDestinationAdapter);
     }
 

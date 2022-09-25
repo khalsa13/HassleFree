@@ -6,20 +6,21 @@ import android.os.Parcelable;
 import java.util.Comparator;
 
 public class Destination implements Parcelable {
-    private final String destinationName, exactLocation, image;
+    private final String destinationName, exactLocation, image, description;
     private final double distance;
     private final double rating;
 
-    Destination(String destinationName, String exactLocation, double distance, double rating, String image){
+    Destination(String destinationName, String exactLocation, double distance, double rating, String image, String description){
         this.distance = distance;
         this.exactLocation = exactLocation;
         this.destinationName = destinationName;
         this.rating = rating;
         this.image = image;
+        this.description = description;
     }
 
     public String getDescription(){
-        return "this is dummy description. Changes required to make this work question is where to get to get if maps api is providing then okay";
+        return this.description;
     }
 
     protected Destination(Parcel in) {
@@ -28,6 +29,7 @@ public class Destination implements Parcelable {
         image = in.readString();
         distance = in.readDouble();
         rating = in.readDouble();
+        description = in.readString();
     }
 
     public static final Creator<Destination> CREATOR = new Creator<Destination>() {
@@ -110,5 +112,11 @@ public class Destination implements Parcelable {
         parcel.writeString(image);
         parcel.writeDouble(distance);
         parcel.writeDouble(rating);
+        parcel.writeString(description);
+    }
+
+    @Override
+    public String toString(){
+        return this.destinationName + " " + this.rating;
     }
 }

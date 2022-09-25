@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
@@ -48,6 +49,16 @@ public class RecyclerViewDestinationAdapter extends RecyclerView.Adapter<Recycle
         holder.rating.setText(String.valueOf(destination.getRating()));
         String distanceValue = String.valueOf(destination.getDistance()).substring(0,2).replace(".","") + " Km";
         holder.distance.setText(distanceValue);
+
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Toast.makeText(ctx, "clicking new clicker!!", Toast.LENGTH_SHORT).show();
+                clickListener.onItemClick(destination);
+            }
+        });
+
     }
 
     @Override
