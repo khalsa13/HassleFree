@@ -61,13 +61,14 @@ public class MainActivity2 extends AppCompatActivity {
         // String current = getIntent().getStringExtra("current");
         Destination currentDestination = getIntent().getParcelableExtra("current");
 
-        Toast.makeText(getApplicationContext(),currentDestination.toString(), Toast.LENGTH_SHORT).show();
-        String _destinations = "";
+        // Toast.makeText(getApplicationContext(),currentDestination.toString(), Toast.LENGTH_SHORT).show();
+        /*String _destinations = "";
         for(Destination d : destinations){
             _destinations += d.toString();
             _destinations += " ";
         }
         Log.i("2ndActivity", _destinations);
+        */
         populateData(currentDestination);
     }
 }

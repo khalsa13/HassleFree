@@ -203,12 +203,10 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         globalTabPosition = filter;
         String API_KEY = "AIzaSyB30OSuMEkVEPQSxzzPvmDKLQNVc-Nm7xI";
         String url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?keyword="+ globalDestination + city +"&location="+latitGlobal+"%2C"+longitGlobal+"&radius=50000&key="+API_KEY;
-        Log.i("FetchApi", url);
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         String uri = Uri.parse(url)
                 .buildUpon()
                 .build().toString();
-        Log.i("FetchApi", uri);
         JsonObjectRequest request = new JsonObjectRequest(
                 Request.Method.GET, uri,null, new Response.Listener<JSONObject>() {
             @Override
