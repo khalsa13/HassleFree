@@ -90,44 +90,39 @@
         android:layout_width="match_parent"
         android:layout_height="30dp"
         android:textStyle="bold"
-        android:layout_marginStart="16dp"
+        android:layout_marginStart="12dp"
         android:layout_marginTop="8dp"
         android:textSize="22sp"
         android:id="@+id/desc"
         android:fontFamily="sans-serif"
         android:text="Description"
         />
+
+
     <ScrollView
         android:id="@+id/scrollView2"
         android:layout_width="match_parent"
-        android:layout_height="150dp"
+        android:layout_height="200dp"
+        android:fillViewport="true"
         android:layout_marginStart="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/desc"
         >
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_margin="4dp"
+        <EditText
+            android:id="@+id/description"
+            android:paddingTop="5dp"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <EditText
-                android:id="@+id/description"
-                android:paddingTop="5dp"
-                android:layout_width="match_parent"
-                android:layout_height="200dp"
-                android:maxLines="7"
-                android:lines = "7"
-                android:ems="10"
-                android:gravity="start|top"
-                android:inputType="textMultiLine"
-                android:text="Dummy text so much text"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:fontFamily="sans-serif"
+            android:gravity="start|top"
+            android:inputType="textMultiLine"
+            android:text="Loading Description... Please wait."
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
     </ScrollView>
 
     <androidx.constraintlayout.widget.ConstraintLayout

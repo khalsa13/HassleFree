@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -26,7 +27,15 @@ import com.bumptech.glide.Glide;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
+import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.net.Proxy;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -39,15 +48,18 @@ public class MainActivity2 extends AppCompatActivity {
     private String errorImage = "<default_image_path>";
     private ArrayList<Destination> destinations;
     private Button bookCab;
-
+    private  EditText description;
+    private String queryText;
     // get the fields using R.ID thing and set the data from the destinations.
     private void populateData(Destination destination) {
         TextView destinationName = findViewById(R.id.textView5);
         TextView rating = findViewById(R.id.textView6);
-        EditText description = findViewById(R.id.description);
+        description = findViewById(R.id.description);
         TextView travelCost = findViewById(R.id.travelCost);
         ImageView imageView = findViewById(R.id.imageView4);
         bookCab = findViewById(R.id.buttonBookCab);
+        queryText = destination.getDestinationName();
+        new doIT().execute();
 
         destinationName.setText(destination.getDestinationName());
         rating.setText(Double.toString(destination.getRating()));
@@ -55,7 +67,6 @@ public class MainActivity2 extends AppCompatActivity {
         Log.d("desc", _description);
         description.setTextColor(Color.BLACK);
         description.setAllCaps(true);
-        description.setText(_description);
         travelCost.setText(CalculateTravelCost(destination));
         Glide.with(getApplicationContext()).load(destination.getImage()).into(imageView);
         //fetchEstimates(destination.getLat(), destination.getLng(), destination.getDropLat(), destination.getDropLng());
@@ -92,7 +103,6 @@ public class MainActivity2 extends AppCompatActivity {
         destinations = getIntent().getParcelableArrayListExtra("destinations");
         // String current = getIntent().getStringExtra("current");
         Destination currentDestination = getIntent().getParcelableExtra("current");
-
         // Toast.makeText(getApplicationContext(),currentDestination.toString(), Toast.LENGTH_SHORT).show();
         /*String _destinations = "";
         for(Destination d : destinations){
@@ -157,6 +167,29 @@ public class MainActivity2 extends AppCompatActivity {
             }
         };
         requestQueue.add(request);
+    }
+
+    public class doIT extends AsyncTask<Void,Void,Void> {
+        String words;
+        @Override
+        protected Void doInBackground(Void... params) {
+            try {
+                String request = "https://search.yahoo.com/search?p="+queryText;
+                Document doc = Jsoup
+                        .connect(request).get();
+                Elements links = doc.getElementsByClass("compText mt-16 mb-16 cl-b fc-falcon pl-15 pr-15 fz-13 lh-16");
+
+                words = links.text();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } return null;
+        }
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            words = words.replace("Wikipedia","");
+            description.setText(words);
+        }
     }
 
 }

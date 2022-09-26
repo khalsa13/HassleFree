@@ -1,6 +1,7 @@
 package com.example.hasslefree;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class RecyclerViewDestinationAdapter extends RecyclerView.Adapter<RecyclerViewDestinationAdapter.MyViewHolder>{
@@ -22,6 +24,7 @@ public class RecyclerViewDestinationAdapter extends RecyclerView.Adapter<Recycle
     private final List<Destination> destinationsList;
     private  ClickListener<Destination>clickListener = null;
     private Context ctx;
+    List<CardView>cardViewList = new ArrayList<>();
 
     RecyclerViewDestinationAdapter(List<Destination>destinations, Context ctx)
     {
@@ -33,6 +36,9 @@ public class RecyclerViewDestinationAdapter extends RecyclerView.Adapter<Recycle
     @Override
     public RecyclerViewDestinationAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recycler_view_destinations,parent,false);
+        for(CardView cardView : cardViewList){
+            cardView.setCardBackgroundColor(ctx.getResources().getColor(R.color.white));
+        }
         return new MyViewHolder(view);
     }
 
@@ -56,6 +62,13 @@ public class RecyclerViewDestinationAdapter extends RecyclerView.Adapter<Recycle
             public void onClick(View view) {
                 // Toast.makeText(ctx, "clicking new clicker!!", Toast.LENGTH_SHORT).show();
                 clickListener.onItemClick(destination);
+                cardViewList.add(holder.cardView); //add all the cards to this list
+                for(CardView cardView : cardViewList){
+                    cardView.setCardBackgroundColor(ctx.getResources().getColor(R.color.white));
+                }
+                //The selected card is set to colorSelected
+                holder.cardView.setCardBackgroundColor(Color.parseColor("#E5E7E9"));
+
             }
         });
 
