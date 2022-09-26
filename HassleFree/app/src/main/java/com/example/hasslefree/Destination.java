@@ -7,16 +7,19 @@ import java.util.Comparator;
 
 public class Destination implements Parcelable {
     private final String destinationName, exactLocation, image, description;
-    private final double distance;
-    private final double rating;
+    private final double distance, lat ,lng, dropLat, dropLng, rating;
 
-    Destination(String destinationName, String exactLocation, double distance, double rating, String image, String description){
+    Destination(String destinationName, String exactLocation, double distance, double rating, String image, String description, double lat, double lng, double dropLat, double dropLng){
         this.distance = distance;
         this.exactLocation = exactLocation;
         this.destinationName = destinationName;
         this.rating = rating;
         this.image = image;
         this.description = description;
+        this.lat = lat;
+        this.lng = lng;
+        this.dropLat = dropLat;
+        this.dropLng = dropLng;
     }
 
     public String getDescription(){
@@ -30,6 +33,10 @@ public class Destination implements Parcelable {
         distance = in.readDouble();
         rating = in.readDouble();
         description = in.readString();
+        lat = in.readDouble();
+        lng = in.readDouble();
+        dropLat = in.readDouble();
+        dropLng = in.readDouble();
     }
 
     public static final Creator<Destination> CREATOR = new Creator<Destination>() {
@@ -52,6 +59,18 @@ public class Destination implements Parcelable {
     }
     public double getDistance(){
         return this.distance;
+    }
+    public double getLat(){
+        return this.lat;
+    }
+    public double getLng(){
+        return this.lng;
+    }
+    public double getDropLat(){
+        return this.dropLat;
+    }
+    public double getDropLng(){
+        return this.dropLng;
     }
     public double getRating(){
         return this.rating;
@@ -113,6 +132,10 @@ public class Destination implements Parcelable {
         parcel.writeDouble(distance);
         parcel.writeDouble(rating);
         parcel.writeString(description);
+        parcel.writeDouble(lat);
+        parcel.writeDouble(lng);
+        parcel.writeDouble(dropLat);
+        parcel.writeDouble(dropLng);
     }
 
     @Override
