@@ -84,10 +84,10 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-       // lottieAnimationView = findViewById(R.id.loading);
-        locationText = (TextView)findViewById(R.id.cityName);
-        ActivityCompat.requestPermissions( this,
-                new String[] {Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION);
+        // lottieAnimationView = findViewById(R.id.loading);
+        locationText = (TextView) findViewById(R.id.cityName);
+        ActivityCompat.requestPermissions(this,
+                new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION);
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
             OnGPS();
@@ -100,12 +100,11 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, MainActivity3.class);
                 fetchApi(0, locationText.getText().toString());
-                destinations.add(new Destination("Source","Source",0.0,0.0,"dummy","dummy",latitGlobal, longitGlobal,0.0,0.0));
+                destinations.add(new Destination("Source", "Source", 0.0, 0.0, "dummy", "dummy", latitGlobal, longitGlobal, 0.0, 0.0));
                 intent.putExtra("LIST", (Serializable) destinations);
                 startActivity(intent);
             }
         });
-
 
 
         recyclerViewCategories = (RecyclerView) findViewById(R.id.recyclerViewCategories);
@@ -114,8 +113,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
             public void onItemClick(View v, int position) {
                 Log.d("position is : ", "pos " + position);
                 destinations.clear();
-                switch (position)
-                {
+                switch (position) {
                     case 0:
                         globalDestination = "best tourist attraction in";
                         break;
@@ -171,7 +169,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         tabLayout.addTab(tabLayout.newTab().setText("Nearest"));
         tabLayout.addTab(tabLayout.newTab().setText("All"));
 
-        recyclerViewDestination = (RecyclerView)findViewById(R.id.recyclerViewDestinations);
+        recyclerViewDestination = (RecyclerView) findViewById(R.id.recyclerViewDestinations);
 
         if (selectedCity == null) {
             final TextView textView = (TextView) findViewById(R.id.cityName);
@@ -182,33 +180,30 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 destinations.clear();
-                if(tab.getPosition() == 0)
-                {
+                if (tab.getPosition() == 0) {
                     fetchApi(tab.getPosition(), locationText.getText().toString());
-                }
-                else if(tab.getPosition() == 1)
-                {
+                } else if (tab.getPosition() == 1) {
                     fetchApi(tab.getPosition(), locationText.getText().toString());
-                }
-                else
-                {
+                } else {
                     fetchApi(tab.getPosition(), locationText.getText().toString());
                 }
             }
+
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
             }
+
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
             }
         });
-
+    }
     public void fetchApi(int filter, String city) {
         //for emulator testing hardcode lat, lng.
         /*latitGlobal = 18.516726;
         longitGlobal = 73.856255;*/
         globalTabPosition = filter;
-        String API_KEY = "AIzaSyB30OSuMEkVEPQSxzzPvmDKLQNVc-Nm7xI";
+        String API_KEY = "apiKey";
         String url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?keyword="+ globalDestination + city +"&location="+latitGlobal+"%2C"+longitGlobal+"&radius=50000&key="+API_KEY;
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         String uri = Uri.parse(url)
