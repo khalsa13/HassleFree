@@ -69,6 +69,8 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
     private RecyclerViewCategoriesAdapter recyclerViewCategoriesAdapter = null;
     private ArrayList<Destination>destinations;
     private int globalTabPosition;
+
+    String API_KEY;
   //  private LottieAnimationView lottieAnimationView;
 
     // call this method from on click listner.
@@ -84,6 +86,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        API_KEY = "YOUR API KEY";
         // lottieAnimationView = findViewById(R.id.loading);
         locationText = (TextView) findViewById(R.id.cityName);
         ActivityCompat.requestPermissions(this,
@@ -141,7 +144,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         // Specify the types of place data to return.
         autocompleteFragment.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.LAT_LNG));
         if (!Places.isInitialized()) {
-            Places.initialize(getApplicationContext(), "api-key", Locale.US);
+            Places.initialize(getApplicationContext(), API_KEY, Locale.US);
         }
         autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
             @Override
@@ -203,7 +206,6 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         /*latitGlobal = 18.516726;
         longitGlobal = 73.856255;*/
         globalTabPosition = filter;
-        String API_KEY = "apiKey";
         String url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?keyword="+ globalDestination + city +"&location="+latitGlobal+"%2C"+longitGlobal+"&radius=50000&key="+API_KEY;
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         String uri = Uri.parse(url)
