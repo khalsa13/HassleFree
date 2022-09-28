@@ -54,7 +54,7 @@ import java.util.Locale;
 public class MainActivity extends AppCompatActivity implements LocationListener {
     private TextView locationText;
     AutocompleteSupportFragment autocompleteFragment;
-    private Button completeDetailButton;
+    private Button checkBestRoute;
     protected LocationManager locationManager;
     private static final int REQUEST_LOCATION = 1;
     private TabLayout tabLayout;
@@ -91,7 +91,19 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         } else {
             getLocation(locationText);
         }
-        completeDetailButton = (Button) findViewById(R.id.completeDetailButton);
+        checkBestRoute = (Button) findViewById(R.id.completeDetailButton);
+        checkBestRoute.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, MainActivity3.class);
+                /*intent.putParcelableArrayListExtra("destinations", destinations);
+                intent.putExtra("current", data);*/
+                startActivity(intent);
+            }
+        });
+
+
+
         recyclerViewCategories = (RecyclerView) findViewById(R.id.recyclerViewCategories);
         recyclerViewCategoriesAdapter = new RecyclerViewCategoriesAdapter(createCategories(), new RecyclerViewCategoriesAdapter.OnItemClickListener() {
             @Override
@@ -187,13 +199,6 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
             }
         });
 
-        completeDetailButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // write intent here to call ne activity with complete route to hotspot destination
-                // with total distance, total cost and time to travel. in  travel category.
-            }
-        });
     }
 
     public void fetchApi(int filter, String city) {
