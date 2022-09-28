@@ -45,6 +45,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -96,8 +97,9 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, MainActivity3.class);
-                /*intent.putParcelableArrayListExtra("destinations", destinations);
-                intent.putExtra("current", data);*/
+                fetchApi(0, locationText.getText().toString());
+                destinations.add(new Destination("Source","Source",0.0,0.0,"dummy","dummy",latitGlobal, longitGlobal,0.0,0.0));
+                intent.putExtra("LIST", (Serializable) destinations);
                 startActivity(intent);
             }
         });
