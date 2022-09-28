@@ -11,6 +11,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
@@ -24,6 +25,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -201,8 +203,6 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
             }
         });
 
-    }
-
     public void fetchApi(int filter, String city) {
         //for emulator testing hardcode lat, lng.
         /*latitGlobal = 18.516726;
@@ -361,6 +361,10 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
     @Override
     public void onLocationChanged(@NonNull Location location) {
         //Toast.makeText(this,location.getLatitude()+"  "+ location.getLongitude(), Toast.LENGTH_LONG).show();
+//        Intent intent = new Intent(this, LocationService.class);
+//        intent.putExtra("lastLat", latitGlobal);
+//        intent.putExtra("lastLong", longitGlobal);
+//        startService(intent);
     }
 
     @Override
@@ -412,4 +416,22 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         }
         return district;
     }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Intent intent = new Intent(this, LocationService.class);
+        intent.putExtra("lastLat", latitGlobal);
+        intent.putExtra("lastLong", longitGlobal);
+        startService(intent);
+    }
+
+//    @Override
+//    protected void onDestroy() {
+//        super.onDestroy();
+//        Intent intent = new Intent(this, LocationService.class);
+//        intent.putExtra("lastLat", latitGlobal);
+//        intent.putExtra("lastLong", longitGlobal);
+//        startService(intent);
+//    }
 }
