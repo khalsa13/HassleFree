@@ -1,6 +1,7 @@
 package com.example.hasslefree;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,12 +15,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class RecyclerViewCategoriesAdapter extends RecyclerView.Adapter<RecyclerViewCategoriesAdapter.MyViewHolderCategories>{
     private final List<Categories> categoriesList;
     private OnItemClickListener onItemClickListener;
     private Context ctx;
+    List<CardView>cardViewList = new ArrayList<>();
 
     RecyclerViewCategoriesAdapter(List<Categories>categories,  OnItemClickListener onItemClickListener, Context ctx){
         this.categoriesList = categories;
@@ -32,6 +35,9 @@ public class RecyclerViewCategoriesAdapter extends RecyclerView.Adapter<Recycler
     @Override
     public RecyclerViewCategoriesAdapter.MyViewHolderCategories onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recycler_view_categories,parent,false);
+        for(CardView cardView : cardViewList){
+            cardView.setCardBackgroundColor(ctx.getResources().getColor(R.color.white));
+        }
         return new MyViewHolderCategories(view);
     }
 
@@ -49,6 +55,13 @@ public class RecyclerViewCategoriesAdapter extends RecyclerView.Adapter<Recycler
             @Override
             public void onClick(View v) {
                 onItemClickListener.onItemClick(v , position);
+                cardViewList.add(holder.cardView); //add all the cards to this list
+                for(CardView cardView : cardViewList){
+                    cardView.setCardBackgroundColor(ctx.getResources().getColor(R.color.white));
+                }
+                //The selected card is set to colorSelected
+                holder.cardView.setCardBackgroundColor(Color.parseColor("#E5E7E9"));
+
             }
         });
    }
@@ -67,6 +80,7 @@ public class RecyclerViewCategoriesAdapter extends RecyclerView.Adapter<Recycler
             categoryTitle = itemView.findViewById(R.id.categoryName);
             categoryImage = itemView.findViewById(R.id.categoryImage);
             cardView = itemView.findViewById(R.id.cardViewCategories);
+
         }
     }
 

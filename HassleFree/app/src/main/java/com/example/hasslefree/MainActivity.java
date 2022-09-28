@@ -47,6 +47,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -56,7 +57,7 @@ import java.util.Locale;
 public class MainActivity extends AppCompatActivity implements LocationListener {
     private TextView locationText;
     AutocompleteSupportFragment autocompleteFragment;
-    private Button completeDetailButton;
+    private Button checkBestRoute;
     protected LocationManager locationManager;
     private static final int REQUEST_LOCATION = 1;
     private TabLayout tabLayout;
@@ -66,9 +67,18 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
     private RecyclerView recyclerViewDestination = null, recyclerViewCategories = null;
     private RecyclerViewDestinationAdapter recyclerViewDestinationAdapter = null;
     private RecyclerViewCategoriesAdapter recyclerViewCategoriesAdapter = null;
-    private List<Destination>destinations;
+    private ArrayList<Destination>destinations;
     private int globalTabPosition;
   //  private LottieAnimationView lottieAnimationView;
+
+    // call this method from on click listner.
+    // pass the data of the place that needs to be opened in the new tab.
+    private void callSecondActivity(Destination data){
+        Intent intent = new Intent(MainActivity.this, MainActivity2.class);
+        intent.putParcelableArrayListExtra("destinations", destinations);
+        intent.putExtra("current", data);
+        startActivity(intent);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,7 +94,20 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         } else {
             getLocation(locationText);
         }
-        completeDetailButton = (Button) findViewById(R.id.completeDetailButton);
+        checkBestRoute = (Button) findViewById(R.id.completeDetailButton);
+        checkBestRoute.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, MainActivity3.class);
+                fetchApi(0, locationText.getText().toString());
+                destinations.add(new Destination("Source","Source",0.0,0.0,"dummy","dummy",latitGlobal, longitGlobal,0.0,0.0));
+                intent.putExtra("LIST", (Serializable) destinations);
+                startActivity(intent);
+            }
+        });
+
+
+
         recyclerViewCategories = (RecyclerView) findViewById(R.id.recyclerViewCategories);
         recyclerViewCategoriesAdapter = new RecyclerViewCategoriesAdapter(createCategories(), new RecyclerViewCategoriesAdapter.OnItemClickListener() {
             @Override
@@ -180,32 +203,17 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
             }
         });
 
-        completeDetailButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // write intent here to call ne activity with complete route to hotspot destination
-                // with total distance, total cost and time to travel. in  travel category.
-            }
-        });
-
-//        Intent intent = new Intent(this, LocationService.class);
-//        intent.putExtra("lastLat", latitGlobal);
-//        intent.putExtra("lastLong", longitGlobal);
-//        startService(intent);
-    }
-
     public void fetchApi(int filter, String city) {
         //for emulator testing hardcode lat, lng.
         /*latitGlobal = 18.516726;
         longitGlobal = 73.856255;*/
         globalTabPosition = filter;
-        String API_KEY = "api key";
+        String API_KEY = "AIzaSyB30OSuMEkVEPQSxzzPvmDKLQNVc-Nm7xI";
         String url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?keyword="+ globalDestination + city +"&location="+latitGlobal+"%2C"+longitGlobal+"&radius=50000&key="+API_KEY;
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         String uri = Uri.parse(url)
                 .buildUpon()
                 .build().toString();
-
         JsonObjectRequest request = new JsonObjectRequest(
                 Request.Method.GET, uri,null, new Response.Listener<JSONObject>() {
             @Override
@@ -239,8 +247,14 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
                     String[] address = actor.getString("vicinity").split(",");
                     Log.i("SearchAddress", Arrays.toString(address));
                     String exactLocation = address[0];
+                    String description = "";
+                    JSONArray types = actor.getJSONArray("types");
+                    for(int _p=0;_p<types.length();_p++){
+                        description += types.getString(_p);
+                        description += "\n";
+                    }
                     Thread.sleep(50);
-                    destinations.add(new Destination(name, exactLocation, distance, rating, photoUrl));
+                    destinations.add(new Destination(name, exactLocation, distance, rating, photoUrl, description,location.getDouble("lat"), location.getDouble("lng"), latitGlobal, longitGlobal));
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -330,13 +344,17 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
     private void PopulateDestinationRecyclerView(RecyclerView recyclerView, RecyclerViewDestinationAdapter recyclerViewDestinationAdapter){
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);
         recyclerView.setLayoutManager(layoutManager);
+
         recyclerViewDestinationAdapter.setOnItemClickListener(new RecyclerViewDestinationAdapter.ClickListener<Destination>(){
 
             @Override
             public void onItemClick(Destination data) {
-                Toast.makeText(MainActivity.this, data.getDestinationName(), Toast.LENGTH_SHORT).show();
+                callSecondActivity(data);
+                // Toast.makeText(MainActivity.this, data.getDestinationName() + "$babnish", Toast.LENGTH_SHORT).show();
             }
         });
+
+
         recyclerView.setAdapter(recyclerViewDestinationAdapter);
     }
 
