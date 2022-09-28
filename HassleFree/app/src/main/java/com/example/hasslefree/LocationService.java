@@ -3,6 +3,7 @@ package com.example.hasslefree;
 import android.Manifest;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -101,14 +102,19 @@ public class LocationService extends Service implements LocationListener {
                 Log.i("LocationService dist", String.valueOf(distance));
                 if (distance > 0.0000000001) {
                     createNotificationChannel();
+                    Intent openIntent = new Intent(this, MainActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, openIntent, PendingIntent.FLAG_IMMUTABLE);
                     NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "1")
                             .setSmallIcon(R.drawable.locationicon)
                             .setContentTitle("Trying to find a place?")
                             .setContentText("Your location has changed! Checkout for new itinerary")
+                            .setContentIntent(pendingIntent)
                             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                             .setChannelId("1");
                     NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
-                    notificationManager.notify(new Random().nextInt(), builder.build());
+                    int notificationId = new Random().nextInt();
+                    notificationManager.notify(notificationId, builder.build());
                     Log.i("LocationService notif", "Notified");
                 }
             }
